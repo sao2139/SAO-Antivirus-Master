@@ -1,18 +1,17 @@
 ; Script generated for SAO-Antivirus (Project Aegis)
-; UPDATED FOR: Auto-Update System (Enterprise Grade)
-; LANGUAGES: ENGLISH & SPANISH
-; IMAGES: BMP FORMAT
+; VERSION: 1.0.2 Guardian Edition
+; COMPATIBILITY: Windows 10/11
+; TYPE: Enterprise Auto-Update Ready
 
 #define MyAppName "SAO-Antivirus"
-; CAMBIO 1: Incrementamos la versión para que el sistema detecte que es nuevo
-#define MyAppVersion "1.0.1 Guardian Edition"
+; CAMBIO: Versión 1.0.2 para que el sistema de updates la reconozca
+#define MyAppVersion "1.0.2 Guardian Edition"
 #define MyAppPublisher "Kirito Dev" 
 #define MyAppExeName "SAO-Antivirus.exe"
 
 [Setup]
-; --- Application Identity ---
-; ¡IMPORTANTE! Este AppId es el mismo que me pasaste. NO LO CAMBIES.
-; Gracias a que es idéntico, Windows sabe que es una actualización y no un programa nuevo.
+; --- Identidad de la Aplicación ---
+; MANTENER ESTE ID IGUAL SIEMPRE para permitir actualizaciones
 AppId={{A1B2C3D4-E5F6-7890-SAO-PROJECT-AEGIS}}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
@@ -20,52 +19,52 @@ AppPublisher={#MyAppPublisher}
 DefaultDirName={autopf}\{#MyAppName}
 DisableProgramGroupPage=yes
 
-; --- UPDATE SETTINGS (NUEVO: Lógica Empresarial) ---
-; Detecta si la app está corriendo y la cierra suavemente para poder actualizar los archivos .exe
+; --- Configuración de Actualización (Enterprise) ---
+; Cierra la app vieja si está corriendo
 CloseApplications=yes
-; Evita que la app se reinicie sola al terminar (tu código Python controla el reinicio si quieres)
+; No reinicia la app automáticamente (deja que el usuario decida)
 RestartApplications=no
-; Si ya está instalado, no pregunta la carpeta de nuevo (Actualización Directa/Silenciosa)
+; Si ya existe, actualiza sin preguntar ruta (Silencioso)
 DisableDirPage=auto
 
-; --- LANGUAGE SETTINGS (Ask the user) ---
+; --- Estética ---
 ShowLanguageDialog=yes
-
-; --- VISUAL AESTHETICS (Must be BMP) ---
 SetupIconFile=assets\logo.ico
 WizardImageFile=assets\banner_install.bmp
 WizardSmallImageFile=assets\logo_sao.bmp
 
-; --- Output Settings ---
+; --- Configuración de Salida ---
 OutputDir=Instalador_Final
-OutputBaseFilename=Setup_SAO_Antivirus_Multi
+OutputBaseFilename=Setup_SAO_Antivirus_v1.0.2
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
 PrivilegesRequired=admin
 
 [Languages]
-; Define both languages here
-Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "spanish"; MessagesFile: "compiler:Languages\Spanish.isl"
+Name: "english"; MessagesFile: "compiler:Default.isl"
+Name: "french"; MessagesFile: "compiler:Languages\French.isl"
 
 [Tasks]
-; The string "{cm:CreateDesktopIcon}" automatically translates based on selection
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-; 1. The Main Executable
+; 1. Ejecutable Principal (Asegúrate que esté en la carpeta dist/)
 Source: "dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 
-; 2. Assets Folder
+; 2. Recursos y Assets
 Source: "assets\*"; DestDir: "{app}\assets"; Flags: ignoreversion recursesubdirs createallsubdirs
 
-; 3. Configuration and Readme
-; CAMBIO CRÍTICO: 'onlyifdoesntexist' evita que la actualización borre la configuración del usuario.
+; 3. Configuración del Usuario
+; 'onlyifdoesntexist' es VITAL: No borra la config del usuario si ya tiene una
 Source: "config.json"; DestDir: "{app}"; Flags: ignoreversion onlyifdoesntexist
+
+; 4. Documentación
 Source: "README.md"; DestDir: "{app}"; Flags: ignoreversion isreadme
 
 [Dirs]
+; Crear carpetas vacías necesarias
 Name: "{app}\quarantine_vault"
 Name: "{app}\database"
 Name: "{app}\logs"
@@ -75,5 +74,5 @@ Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFile
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon; IconFilename: "{app}\assets\logo.ico"
 
 [Run]
-; El flag 'nowait' permite que el instalador termine y tu script Python no se quede colgado esperando.
+; Ejecutar al finalizar
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent runascurrentuser

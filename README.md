@@ -1,36 +1,65 @@
-#  SAO-Antivirus
+<div align="center">
+  <img src="assets/logo_sao.png" alt="SAO Logo" width="180">
+  
+  <h1>SAO-ANTIVIRUS | GUARDIAN EDITION</h1>
 
-> "Link Start into a safer system."
+  <a href="#">
+    <img src="https://img.shields.io/badge/VERSION-1.0.2-blue?style=for-the-badge&logo=github" alt="Version">
+  </a>
+  <a href="#">
+    <img src="https://img.shields.io/badge/PLATFORM-WIN%20%2F%20LINUX-0078D6?style=for-the-badge&logo=windows" alt="Platform">
+  </a>
+  <a href="#">
+    <img src="https://img.shields.io/badge/LICENSE-MIT-green?style=for-the-badge" alt="License">
+  </a>
 
-Un sistema de Detección y Respuesta de Endpoint (EDR) programado en Python, inspirado en la estética visual de un leon. Combina análisis heurístico (IA), criptografía de grado militar y monitoreo en tiempo real.
+  <br><br>
 
-![SAO Antivirus Banner](assets/banner_install.png)
+  <p>
+    <b>Solución Híbrida de Detección y Respuesta (EDR) de Código Abierto.</b>
+  </p>
+  
+  <p>
+    Diseñado con una arquitectura modular que combina análisis de firmas estáticas con un motor heurístico de Inteligencia Artificial para la detección de anomalías, Ransomware y amenazas de día cero.
+  </p>
 
-## 🚀 Características Principales
+  <br>
 
-* **Motor Heurístico (A.I. Engine):** Detecta amenazas desconocidas basándose en entropía matemática y análisis de cabeceras PE, no solo firmas.
-* **Bóveda de Cuarentena (AES-256):** Los archivos infectados no se borran; se cifran criptográficamente y se aíslan.
-* **Escudo de Red (Network Guard):** Sniffer de paquetes en tiempo real (basado en Scapy) para detectar tráfico C&C.
-* **Interfaz Neural (UI):** Dashboard moderno creado con `CustomTkinter` y gráficos de datos en tiempo real.
-* **Honeypots:** Trampas anti-ransomware que detectan modificaciones ilegales.
+  <h3>Language</h3>
+  <img src="https://img.shields.io/badge/PYTHON-3.11+-FFD43B?style=for-the-badge&logo=python&logoColor=black" alt="Python">
 
-## 🛠️ Instalación
+</div>
 
-1.  **Requisitos:** Python 3.10+ y privilegios de Administrador.
-2.  **Instalar dependencias:**
-    ```bash
-    pip install -r requirements.txt
-    ```
-    *(Nota: En Windows, necesitarás instalar [Npcap](https://npcap.com/) para que el módulo de red funcione correctamente)*.
+---
 
-3.  **Primer Inicio (Setup):**
-    Ejecuta el instalador gráfico para preparar el entorno:
-    ```bash
-    python ui/installer_ui.py
-    ```
+## Technical Overview
 
-## ⚔️ Ejecución
+SAO-Antivirus (Guardian Edition) no es solo una interfaz gráfica. Es un sistema de defensa activo que opera bajo el principio de "Cero Confianza".
 
-Para iniciar el Dashboard principal:
+* **Hybrid Core:** El núcleo del sistema detecta automáticamente el sistema operativo (Windows/Linux) y ajusta sus drivers de monitoreo.
+* **Stream Scanning:** Implementación de lectura de archivos por flujo (chunks de 64KB) para analizar grandes volúmenes de datos sin impactar la memoria RAM.
+* **Entropy Analysis:** Algoritmo matemático que mide la aleatoriedad de los archivos para identificar patrones de cifrado malicioso (Ransomware) antes de que se ejecuten.
+* **OTA Updates:** Sistema de actualización "Over-The-Air" que sincroniza el cliente con el repositorio central para parches de seguridad inmediatos.
+
+## Installation
+
+### Windows (Client)
+1.  Descarga el ejecutable `Setup_SAO_Antivirus.exe` desde la sección **Releases**.
+2.  Ejecuta el instalador con permisos de Administrador.
+3.  El sistema configurará automáticamente el Watchdog y el servicio en segundo plano.
+
+### Linux (Root / Headless)
+Compatible con Debian, Ubuntu, Kali Linux y derivados.
+
 ```bash
-python main.py
+# 1. Clonar repositorio o descargar fuente
+git clone [https://github.com/TU_USUARIO/SAO-Antivirus-Master.git](https://github.com/TU_USUARIO/SAO-Antivirus-Master.git)
+
+# 2. Dar permisos de ejecución al instalador
+chmod +x install.sh
+
+# 3. Instalar (Requiere Root)
+sudo ./install.sh
+
+# 4. Iniciar
+sao-av

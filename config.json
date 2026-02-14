@@ -1,11 +1,18 @@
 {
     "app_name": "SAO-Antivirus",
-    "version": "1.0.0 Guardian Edition",
+    "version": "1.0.2 Guardian Edition",
+    "language": "es",
     "paths": {
         "quarantine": "quarantine_vault",
         "database": "database",
         "logs": "database/history.log",
-        "whitelist": ["C:\\Windows", "C:\\Program Files\\SAO-Antivirus"]
+        "whitelist": [
+            "C:\\Windows", 
+            "C:\\Program Files\\SAO-Antivirus",
+            "/bin",
+            "/usr/bin",
+            "/etc"
+        ]
     },
     "security": {
         "ai_sensitivity": "HIGH",
