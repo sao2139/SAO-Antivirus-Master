@@ -1,0 +1,33 @@
+# --- Archivos de Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- Entornos Virtuales ---
+venv/
+env/
+
+# --- Compilación (PyInstaller) ---
+build/
+dist/
+*.spec
+
+# --- Archivos Generados por el Antivirus ---
+# No subir la bóveda de virus real
+quarantine_vault/*
+!quarantine_vault/README.txt
+# No subir logs ni la base de firmas si se genera sola
+database/*.log
+database/*.pkl
+
+# --- Seguridad (CRÍTICO) ---
+# Nunca subir llaves de encriptación reales
+security/*.key
+
+# --- Instaladores ---
+Instalador_Final/
+Output/
+
+# --- Configuración de Usuario ---
+# Opcional: Si config.json tiene contraseñas, ignóralo. Si es genérico, súbelo.
+# config.json

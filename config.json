@@ -1,0 +1,26 @@
+{
+    "app_name": "SAO-Antivirus",
+    "version": "1.0.0 Guardian Edition",
+    "paths": {
+        "quarantine": "quarantine_vault",
+        "database": "database",
+        "logs": "database/history.log",
+        "whitelist": ["C:\\Windows", "C:\\Program Files\\SAO-Antivirus"]
+    },
+    "security": {
+        "ai_sensitivity": "HIGH",
+        "entropy_threshold": 7.2,
+        "max_scan_threads": 4,
+        "enable_network_guard": true,
+        "enable_usb_protection": true
+    },
+    "network": {
+        "blocked_ports": [4444, 31337, 6667],
+        "safe_dns": ["1.1.1.1", "8.8.8.8"]
+    },
+    "ui": {
+        "theme": "Dark",
+        "color_primary": "#0099ff",
+        "color_secondary": "#00ff99"
+    }
+}
