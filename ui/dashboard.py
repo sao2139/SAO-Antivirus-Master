@@ -3,6 +3,8 @@ import threading
 import time
 import os
 import sys
+import json
+import webbrowser  # Para abrir enlaces si fuera necesario
 from tkinter import filedialog
 from PIL import Image
 
@@ -14,6 +16,7 @@ from .components.cards import StatusCard
 from core.engine_ai import AIEngine
 from core.net_guard import NetworkGuard
 from security.quarantine import QuarantineManager
+from core.updater import SAOUpdater  
 
 # --- CONSTANTES DE COLOR SAO ---
 COLOR_BG_DARK = "#1a1a1a"
@@ -40,6 +43,24 @@ class MainDashboard(ctk.CTk):
         self.quarantine = QuarantineManager()
         self.net_guard = NetworkGuard(alert_callback=self.on_network_threat)
         self.net_guard.start()
+
+        # --- SISTEMA DE ACTUALIZACIONES (NUEVO) ---
+        # 1. Cargar versión local
+        self.local_version = "1.0.0" # Valor por defecto
+        try:
+            with open('config.json', 'r') as f:
+                config = json.load(f)
+                # Tomamos solo el número limpio (ej: "1.0.0" de "1.0.0 Guardian Edition")
+                self.local_version = config.get("version", "1.0.0").split(" ")[0]
+        except Exception:
+            print("No se pudo leer la versión local de config.json")
+
+        # 2. Configurar URL del Repositorio (TU RAW)
+        self.repo_json_url = "https://raw.githubusercontent.com/sao2139/SAO-Antivirus-Master/refs/heads/main/version.json"
+
+        # 3. Iniciar chequeo en segundo plano (Daemon Thread)
+        threading.Thread(target=self.run_update_check, daemon=True).start()
+        # ------------------------------------------
 
         # Layout Principal
         self.grid_columnconfigure(1, weight=1)
@@ -75,11 +96,10 @@ class MainDashboard(ctk.CTk):
         except Exception:
             pass
         
-        self.ver_lbl = ctk.CTkLabel(self.sidebar, text="Guardian Ed.", font=("Consolas", 10), text_color=COLOR_GREEN)
+        self.ver_lbl = ctk.CTkLabel(self.sidebar, text=f"v{self.local_version} Guardian", font=("Consolas", 10), text_color=COLOR_GREEN)
         self.ver_lbl.grid(row=1, column=0, padx=20, pady=(0, 30))
 
         # --- BOTONES DE NAVEGACIÓN ---
-        # Ahora conectamos los comandos a funciones reales
         self.btn_home = self.create_nav_btn("DASHBOARD", 2, command=self.show_dashboard_page, active=True)
         self.btn_scan = self.create_nav_btn("ESCANEO", 3, command=self.run_custom_scan)
         self.btn_vault = self.create_nav_btn("BÓVEDA", 4, command=self.show_vault_page)
@@ -93,10 +113,46 @@ class MainDashboard(ctk.CTk):
                                        height=40, font=("Arial", 12, "bold"))
         self.btn_panic.grid(row=7, column=0, padx=20, pady=30, sticky="ew")
 
+    # --- LÓGICA DE ACTUALIZACIÓN ---
+    def run_update_check(self):
+        """Se ejecuta en un hilo separado para no congelar la UI"""
+        updater = SAOUpdater(self.local_version, self.repo_json_url)
+        has_update, msg = updater.check_for_updates()
+        
+        if has_update:
+            # Usar 'after' para modificar la UI desde el hilo principal de forma segura
+            self.after(0, lambda: self.show_update_notification(updater, msg))
+        else:
+             # Opcional: Loguear que está actualizado
+             self.after(0, lambda: self.log_message(f"UPDATE: {msg}"))
+
+    def show_update_notification(self, updater, msg):
+        """Muestra un botón brillante en la sidebar si hay update"""
+        self.log_message(f"¡SISTEMA!: {msg}")
+        
+        # Botón de actualización (Brilla en verde neón)
+        self.btn_update = ctk.CTkButton(self.sidebar, text="⬇ ACTUALIZAR AHORA", 
+                                 fg_color=COLOR_GREEN, text_color="black",
+                                 hover_color="#00cc77",
+                                 font=("Arial", 11, "bold"),
+                                 command=lambda: self.start_update_process(updater))
+        
+        # Lo colocamos encima del botón de pánico
+        self.btn_update.grid(row=6, column=0, padx=20, pady=10, sticky="ew")
+
+    def start_update_process(self, updater):
+        """Inicia la descarga e instalación"""
+        self.btn_update.configure(state="disabled", text="DESCARGANDO...")
+        self.log_message("INICIANDO PROTOCOLO DE ACTUALIZACIÓN...")
+        
+        # Lanza la descarga en otro hilo para que la barra de progreso no se congele
+        threading.Thread(target=updater.download_and_install, daemon=True).start()
+    # -------------------------------
+
     def create_nav_btn(self, text, row, command=None, active=False):
         bg_color = "#222222" if active else "transparent"
         fg_color = COLOR_BLUE if active else "#888888"
-        border_col = COLOR_BLUE if active else COLOR_SIDEBAR # Corrección del borde transparente
+        border_col = COLOR_BLUE if active else COLOR_SIDEBAR 
         
         btn = ctk.CTkButton(self.sidebar, text=text, 
                             fg_color=bg_color, 
@@ -111,7 +167,6 @@ class MainDashboard(ctk.CTk):
         return btn
 
     def clear_content_area(self):
-        """Borra lo que haya en el centro para mostrar otra pantalla"""
         for widget in self.content_area.winfo_children():
             widget.destroy()
 
@@ -154,7 +209,6 @@ class MainDashboard(ctk.CTk):
                              font=("Impact", 24), text_color=COLOR_BLUE, anchor="w")
         title.pack(fill="x", pady=20)
 
-        # Lista de archivos
         files = self.quarantine.list_quarantined_files()
         
         scroll_frame = ctk.CTkScrollableFrame(self.content_area, fg_color="#111")
@@ -171,7 +225,6 @@ class MainDashboard(ctk.CTk):
                 info = f"☣ {meta['original_name']} | {meta['threat_name']} | {meta['timestamp']}"
                 ctk.CTkLabel(row, text=info, font=("Consolas", 12), anchor="w").pack(side="left", padx=10, pady=10)
                 
-                # Botón "Eliminar" (Solo visual por ahora)
                 ctk.CTkButton(row, text="PURGAR", width=80, fg_color="#550000", hover_color="#880000").pack(side="right", padx=10)
 
     # --- PÁGINA 3: AJUSTES ---
@@ -205,14 +258,12 @@ class MainDashboard(ctk.CTk):
         except: pass
 
     def update_system_status(self):
-        # Solo actualizamos si estamos en la página del Dashboard (si existe card_health)
         if hasattr(self, 'card_health') and self.card_health.winfo_exists():
             self.card_health.set_value("100%", COLOR_GREEN)
             
             count = len(self.quarantine.list_quarantined_files())
             self.card_files.set_value(f"{count} Archivos", COLOR_BLUE)
             
-            # Velocidad de red real
             try:
                 real_speed = self.net_guard.get_current_traffic()
                 self.net_graph.update_graph(real_speed)
@@ -228,7 +279,6 @@ class MainDashboard(ctk.CTk):
         filepath = filedialog.askopenfilename()
         if filepath:
             filename = os.path.basename(filepath)
-            # Solo logueamos si estamos en el dashboard
             if hasattr(self, 'log_box'):
                 self.log_message(f"Escaneando: {filename}...")
             
@@ -236,7 +286,6 @@ class MainDashboard(ctk.CTk):
                 is_threat, reason, score = self.ai.scan_file(filepath)
                 if is_threat:
                     self.quarantine.isolate_file(filepath, reason)
-                # (Aquí podrías poner un popup de resultado)
             
             threading.Thread(target=thread_scan).start()
 
