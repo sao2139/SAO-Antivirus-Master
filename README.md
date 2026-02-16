@@ -53,7 +53,7 @@ Compatible con Debian, Ubuntu, Kali Linux y derivados.
 
 ```bash
 # 1. Clonar repositorio o descargar fuente
-git clone [https://github.com/TU_USUARIO/SAO-Antivirus-Master.git](https://github.com/TU_USUARIO/SAO-Antivirus-Master.git)
+git clone [https://github.com/sao2139/SAO-Antivirus-Master.git](https://github.com/sao2139/SAO-Antivirus-Master.git)
 
 # 2. Dar permisos de ejecución al instalador
 chmod +x install.sh
