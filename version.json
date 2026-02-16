@@ -1,8 +1,6 @@
-
-
-{ 
-    "version": "1.0.2",
-    "changelog": "- Optimización de memoria RAM (Stream Scanning)\n- Mejoras en detección heurística",
-    "download_url": "https://github.com/sao2139/SAO-Antivirus-Master/releases/download/v1.0.2/Setup_SAO.exe",
-    "force_update": false
+{
+    "version": "2.0.0",
+    "changelog": "- TrueSight Engine: Detección de Extension Spoofing (Falsos PDF/Videos)\n- Soporte SHA-256\n- Escaneo Recursivo de ZIPs",
+    "download_url": "https://github.com/sao2139/SAO-Antivirus-Master/releases/download/v2.0.0/Setup_SAO.exe",
+    "force_update": true
 }

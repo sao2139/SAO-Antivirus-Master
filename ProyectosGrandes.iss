@@ -1,11 +1,11 @@
 ; Script generated for SAO-Antivirus (Project Aegis)
-; VERSION: 1.0.2 Guardian Edition
+; VERSION: 2.0.0
 ; COMPATIBILITY: Windows 10/11
 ; TYPE: Enterprise Auto-Update Ready
 
 #define MyAppName "SAO-Antivirus"
 ; CAMBIO: Versión 1.0.2 para que el sistema de updates la reconozca
-#define MyAppVersion "1.0.2 Guardian Edition"
+#define MyAppVersion "2.0.0 Guardian Edition"
 #define MyAppPublisher "Kirito Dev" 
 #define MyAppExeName "SAO-Antivirus.exe"
 

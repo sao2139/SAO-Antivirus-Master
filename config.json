@@ -1,6 +1,6 @@
 {
     "app_name": "SAO-Antivirus",
-    "version": "1.0.2 Guardian Edition",
+    "version": "2.0.0 Guardian Edition",
     "language": "es",
     "paths": {
         "quarantine": "quarantine_vault",
@@ -16,7 +16,7 @@
     },
     "security": {
         "ai_sensitivity": "HIGH",
-        "entropy_threshold": 7.2,
+        "entropy_threshold": 7.4,
         "max_scan_threads": 4,
         "enable_network_guard": true,
         "enable_usb_protection": true
